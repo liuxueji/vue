@@ -17,11 +17,11 @@ const banner =
 
 const aliases = require('./alias')
 const resolve = p => {
-  const base = p.split('/')[0]
+  const base = p.split('/')[0] // [web,entry-runtime-with-compiler.ts]
   if (aliases[base]) {
     return path.resolve(aliases[base], p.slice(base.length + 1))
   } else {
-    return path.resolve(__dirname, '../', p)
+    return path.resolve(__dirname, '../', p) // src/platforms/web/entry-runtime-with-compiler.ts
   }
 }
 
@@ -31,6 +31,11 @@ const consolidatePath = require.resolve('@vue/consolidate/package.json', {
   paths: [path.resolve(__dirname, '../packages/compiler-sfc')]
 })
 
+// vue中的打包入口，只有两个重点：web-runtime、web-full
+
+// dev（开发环境） prod（生产模式）
+// web-runtime（运行时 无法解析new Vue传入的template）、 web-full（runtime + 模板解析）、compiler（只有compiler）
+// cjs（commonjs node中使用）、 esm（import、export es6模块）、 browser（script 在浏览器中使用）、 umd（支持global adm+commonJs）
 const builds = {
   // Runtime only (CommonJS). Used by bundlers e.g. Webpack & Browserify
   'runtime-cjs-dev': {
@@ -53,7 +58,9 @@ const builds = {
     dest: resolve('dist/vue.common.dev.js'),
     format: 'cjs',
     env: 'development',
-    alias: { he: './entity-decoder' },
+    alias: {
+      he: './entity-decoder'
+    },
     banner
   },
   'full-cjs-prod': {
@@ -61,7 +68,9 @@ const builds = {
     dest: resolve('dist/vue.common.prod.js'),
     format: 'cjs',
     env: 'production',
-    alias: { he: './entity-decoder' },
+    alias: {
+      he: './entity-decoder'
+    },
     banner
   },
   // Runtime only ES modules build (for bundlers)
@@ -83,7 +92,9 @@ const builds = {
     entry: resolve('web/entry-runtime-with-compiler-esm.ts'),
     dest: resolve('dist/vue.esm.js'),
     format: 'es',
-    alias: { he: './entity-decoder' },
+    alias: {
+      he: './entity-decoder'
+    },
     banner
   },
   // Runtime+compiler ES modules build (for direct import in browser)
@@ -93,7 +104,9 @@ const builds = {
     format: 'es',
     transpile: false,
     env: 'development',
-    alias: { he: './entity-decoder' },
+    alias: {
+      he: './entity-decoder'
+    },
     banner
   },
   // Runtime+compiler ES modules build (for direct import in browser)
@@ -103,7 +116,9 @@ const builds = {
     format: 'es',
     transpile: false,
     env: 'production',
-    alias: { he: './entity-decoder' },
+    alias: {
+      he: './entity-decoder'
+    },
     banner
   },
   // runtime-only build (Browser)
@@ -128,7 +143,9 @@ const builds = {
     dest: resolve('dist/vue.js'),
     format: 'umd',
     env: 'development',
-    alias: { he: './entity-decoder' },
+    alias: {
+      he: './entity-decoder'
+    },
     banner
   },
   // Runtime+compiler production build  (Browser)
@@ -137,7 +154,9 @@ const builds = {
     dest: resolve('dist/vue.min.js'),
     format: 'umd',
     env: 'production',
-    alias: { he: './entity-decoder' },
+    alias: {
+      he: './entity-decoder'
+    },
     banner
   },
   // Web compiler (CommonJS).
@@ -215,7 +234,9 @@ const builds = {
       require('../packages/compiler-sfc/package.json').dependencies
     ),
     plugins: [
-      node({ preferBuiltins: true }),
+      node({
+        preferBuiltins: true
+      }),
       cjs({
         ignore: [
           ...Object.keys(require(consolidatePath).devDependencies),
