@@ -6,22 +6,19 @@ import { lifecycleMixin } from './lifecycle'
 import { warn } from '../util/index'
 import type { GlobalAPI } from 'types/global-api'
 
+// Vue的构造函数
 function Vue(options) {
-  if (__DEV__ && !(this instanceof Vue)) {
-    warn('Vue is a constructor and should be called with the `new` keyword')
-  }
   this._init(options)
 }
 
-//@ts-expect-error Vue has function type
+// Vue.prototype._init
 initMixin(Vue)
-//@ts-expect-error Vue has function type
+// Vue.prototype.$set  Vue.prototype.$delete  Vue.prototype.$watch
 stateMixin(Vue)
-//@ts-expect-error Vue has function type
+// Vue.prototype.$on  Vue.prototype.$once  Vue.prototype.$off  Vue.prototype.$emit
 eventsMixin(Vue)
-//@ts-expect-error Vue has function type
+// Vue.prototype._update  Vue.prototype.$forceUpdate  Vue.prototype.$destroy
 lifecycleMixin(Vue)
-//@ts-expect-error Vue has function type
 renderMixin(Vue)
 
 export default Vue as unknown as GlobalAPI

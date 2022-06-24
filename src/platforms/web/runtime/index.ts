@@ -19,6 +19,7 @@ import platformComponents from './components/index'
 import type { Component } from 'types/component'
 
 // install platform specific utils
+// 判断哪些是原始属性等等（不太重要）
 Vue.config.mustUseProp = mustUseProp
 Vue.config.isReservedTag = isReservedTag
 Vue.config.isReservedAttr = isReservedAttr
@@ -26,18 +27,25 @@ Vue.config.getTagNamespace = getTagNamespace
 Vue.config.isUnknownElement = isUnknownElement
 
 // install platform runtime directives & components
+// 增加了一些平台对应的指令（platformDirectives）例如：model、show；平台对应的组件（platformComponents）例如：transform、transition
 extend(Vue.options.directives, platformDirectives)
 extend(Vue.options.components, platformComponents)
 
 // install platform patch function
+// patch方法（最重要的方法），是渲染时和更新时会调用的方法
+// inBrowser表示是否为浏览器，如果是浏览器就给 patch ，如果是服务器就不需要调用patch，那么就给空函数
 Vue.prototype.__patch__ = inBrowser ? patch : noop
 
 // public mount method
+// 为mount写了一个方法
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
   el = el && inBrowser ? query(el) : undefined
+  // 做组件的挂载
+  // 方法中将this实例，挂载到el中  vm.$el = el
+  // 第三个参数hydrating，表示是否为服务端渲染，布尔值
   return mountComponent(this, el, hydrating)
 }
 
